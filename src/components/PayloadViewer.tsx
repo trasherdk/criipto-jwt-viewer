@@ -64,7 +64,7 @@ interface ClaimTooltipProps {
 }
 function ClaimTooltip(props: ClaimTooltipProps) {
   const {claim} = props;
-  let tooltip : string | null = null;
+  let tooltip : string | React.ReactElement | null = null;
 
   if (claim === 'iss') tooltip = 'Your Criipto domain';
   if (claim === 'aud') tooltip = 'ClientID/Realm of your Criipto Application';
@@ -75,7 +75,13 @@ function ClaimTooltip(props: ClaimTooltipProps) {
   if (claim === 'nameidentifier') tooltip = `Legacy format of 'sub'`;
   if (claim === 'sub') tooltip = `Persistent pseudonym. Uniquely identifies an eID user`;
   if (claim === 'authenticationtype') tooltip = `acr_values used to authenticate`;
-  if (claim === 'address') tooltip = "An OpenID Connect standard address claim"
+  if (claim === 'address') tooltip = (
+    <React.Fragment>
+      <a href="https://openid.net/specs/openid-connect-core-1_0.html#AddressClaim" target="_blank">
+        An OpenID Connect standard address claim
+      </a>
+    </React.Fragment>
+  );
 
   if (!tooltip) return null;
   return <Tooltip tooltip={tooltip} />
