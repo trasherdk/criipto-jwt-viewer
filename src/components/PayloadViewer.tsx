@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import { JwtPayload, JwtPayloadObjectValue, JwtPayloadValue } from '../samples';
+import { JwtPayload, JwtPayloadArrayValue, JwtPayloadObjectValue, JwtPayloadValue, MitIDRiskData } from '../samples';
 
 import Tooltip from './Tooltip';
 
@@ -15,7 +15,7 @@ export default function PayloadViewer(props: Props) {
   return (
     <div className={`criipto-jwt-viewer-payload ${props.className || ''}`}>
       &#123;<br />
-      {keys.map((key, index) => <Claim key={key} claim={key} payload={props.payload} level={1} last={index === keys.length - 1} />)}
+      {keys.map((key, index) => <Claim key={key} claim={key} payload={props.payload} last={index === keys.length - 1} />)}
       &#125;<br />
       {/* for debugging: <pre>
         {JSON.stringify(props.payload, null, 2)}
@@ -25,45 +25,70 @@ export default function PayloadViewer(props: Props) {
 }
 
 interface ClaimProps {
-  claim: string
-  payload: JwtPayload | JwtPayloadObjectValue
-  level: number
+  parentClaim?: string
+  claim: string | number
+  payload: JwtPayload | JwtPayloadObjectValue | JwtPayloadArrayValue
   last: boolean
 }
 
 function Claim(props: ClaimProps) {
-  const value = props.payload[props.claim];
+  const value = typeof props.claim === "number" ? (props.payload as JwtPayloadArrayValue)[props.claim]! : (props.payload as JwtPayload | JwtPayloadObjectValue)[props.claim]!;
   const keys = useMemo(() => value && typeof value === "object" ? Object.keys(value) : null, [value]);
+  const path = typeof props.claim === "number" ? '[]' : props.claim;
+  const claimPath = 
+    typeof props.claim === "number" ?
+      props.parentClaim ? `${props.parentClaim}[]` : '[]' :
+      props.parentClaim ? `${props.parentClaim}.${path}` : path;
 
   if (value && typeof value === 'object') {
+    if (Array.isArray(value)) {
+      return (
+        <div style={{marginLeft: 15}}>
+          <div className="criipto-jwt-viewer-claim">
+            "{props.claim}": &#91;<br />
+            {value.map((item, index) => (
+              <Claim key={index} claim={index} parentClaim={claimPath} payload={value} last={index === value.length - 1} />
+            ))}
+            &#93;{props.last ? null : ','}<br />
+          </div>
+        </div>
+      );
+    }
     return (
-      <div style={{marginLeft: props.level * 15}}>
+      <div style={{marginLeft: 15}}>
         <div className="criipto-jwt-viewer-claim">
-          "{props.claim}": &#123;<br />
-          {keys!.map((key, index) => <Claim key={key} claim={key} payload={value} level={props.level + 1} last={index === keys!.length - 1} />)}
+          {typeof props.claim === "number" ? null : `${props.claim}: `}&#123;<br />
+          {keys!.map((key, index) => <Claim key={key} claim={key} parentClaim={claimPath} payload={value} last={index === keys!.length - 1} />)}
           &#125;{props.last ? null : ','}<br />
-          <ClaimTooltip claim={props.claim} payload={props.payload} />
+          <ClaimTooltip
+            claim={props.claim}
+            claimPath={claimPath}
+            payload={props.payload}
+            value={value}
+          />
         </div>
       </div>
     );
   }
 
   return (
-    <div style={{marginLeft: props.level * 15}}>
+    <div style={{marginLeft: 15}}>
       <div className="criipto-jwt-viewer-claim">
-        "{props.claim}": {JSON.stringify(props.payload[props.claim])}{props.last ? null : ','}
-        <ClaimTooltip claim={props.claim} payload={props.payload} />
+        "{props.claim}": {JSON.stringify(value)}{props.last ? null : ','}
+        <ClaimTooltip claim={props.claim} claimPath={claimPath} payload={props.payload} value={value} />
       </div>
     </div>
   );
 }
 
 interface ClaimTooltipProps {
-  claim: string
-  payload: JwtPayload | JwtPayloadObjectValue
+  claim: string | number
+  claimPath: string
+  payload: JwtPayload | JwtPayloadObjectValue | JwtPayloadArrayValue
+  value: JwtPayloadValue
 }
 function ClaimTooltip(props: ClaimTooltipProps) {
-  const {claim} = props;
+  const {claim, claimPath, value} = props;
   let tooltip : string | React.ReactElement | null = null;
 
   if (claim === 'iss') tooltip = 'Your Criipto domain';
@@ -72,9 +97,11 @@ function ClaimTooltip(props: ClaimTooltipProps) {
   if (claim === 'nbf') tooltip = 'Not valid before (seconds since Unix epoch)';
   if (claim === 'exp') tooltip = 'Expiration time (seconds since Unix epoch)';
   if (claim === 'identityscheme') tooltip = 'Overall eID used to authenticate';
-  if (claim === 'nameidentifier') tooltip = `Legacy format of 'sub'`;
+  if (claim === 'nameidentifier' || claim === 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier') tooltip = `Legacy format of 'sub'`;
   if (claim === 'sub') tooltip = `Persistent pseudonym. Uniquely identifies an eID user`;
   if (claim === 'authenticationtype') tooltip = `acr_values used to authenticate`;
+  if (claim === 'cprNumberIdentifier' || claim === 'dk:gov:saml:attribute:CprNumberIdentifier') tooltip = "Danish SSN (CPR Nummer)"
+  if (claim === 'cvrNumberIdentifier' || claim === 'dk:gov:saml:attribute:CvrNumberIdentifier') tooltip = "Danish Business Registry Number (CVR Nummer)"
   if (claim === 'address') tooltip = (
     <React.Fragment>
       <a href="https://openid.net/specs/openid-connect-core-1_0.html#AddressClaim" target="_blank">
@@ -82,7 +109,28 @@ function ClaimTooltip(props: ClaimTooltipProps) {
       </a>
     </React.Fragment>
   );
+  if (claim === 'pidNumberIdentifier') tooltip = 'Unique legal identifier for Danish Citizen without requiring SSN'
 
-  if (!tooltip) return null;
+  if (claimPath === 'dk:gov:saml:attribute:mitid_risk_data.riskData[]') {
+    if (typeof value === "object" && !Array.isArray(value)) {
+      const riskData = value as MitIDRiskData;
+      console.log(claimPath, riskData);
+      if (riskData.pc === 'network' && riskData.pt === 'ip'){
+        if (riskData.src === 'Client') {
+          tooltip = 'IP-Address of the browser that started the MitID authentication'
+        }
+        if (riskData.src === 'AuthenticatorStandaloneCodeApp') {
+          tooltip = 'IP-Address of the MitID authenticator app'
+        }
+      }
+    }
+  }
+
+  if (!tooltip) {
+    if ("STORYBOOK_ENV" in window) {
+      console.warn(`Missing tooltip for ${claimPath}: ${JSON.stringify(value)}`);
+    }
+    return null;
+  }
   return <Tooltip tooltip={tooltip} />
 }
