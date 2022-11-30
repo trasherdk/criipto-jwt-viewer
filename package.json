@@ -1,0 +1,52 @@
+{
+  "name": "@criipto/jwt-viewer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/criipto-verify-react.cjs.js",
+  "types": "dist/index.d.ts",
+  "module": "dist/criipto-verify-react.esm.js",
+  "scripts": {
+    "clean": "rm -rf dist/",
+    "build": "webpack --config webpack.config.js",
+    "check": "tsc --noEmit",
+    "prepublishOnly": "npm run check && npm run clean && npm run build",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/criipto/criipto-jwt-viewer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/criipto/criipto-jwt-viewer/issues"
+  },
+  "homepage": "https://github.com/criipto/criipto-jwt-viewer#readme",
+  "peerDependencies": {
+    "react": "^16.11.0 || ^17 || ^18",
+    "react-dom": "^16.11.0 || ^17 || ^18"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.5",
+    "@storybook/addon-actions": "^6.5.13",
+    "@storybook/addon-essentials": "^6.5.13",
+    "@storybook/addon-interactions": "^6.5.13",
+    "@storybook/addon-links": "^6.5.13",
+    "@storybook/builder-webpack5": "^6.5.13",
+    "@storybook/manager-webpack5": "^6.5.13",
+    "@storybook/react": "^6.5.13",
+    "@storybook/testing-library": "^0.0.13",
+    "babel-loader": "^8.3.0",
+    "css-loader": "^6.7.2",
+    "mini-css-extract-plugin": "^2.7.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "ts-loader": "^9.4.1",
+    "typescript": "^4.9.3",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.0",
+    "webpack-node-externals": "^3.0.0"
+  },
+  "dependencies": {}
+}
