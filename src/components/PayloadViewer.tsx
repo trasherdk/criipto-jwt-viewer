@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import { JwtPayload } from '../samples';
+import { JwtPayload, JwtPayloadObjectValue, JwtPayloadValue } from '../samples';
 
 import Tooltip from './Tooltip';
 
@@ -26,12 +26,28 @@ export default function PayloadViewer(props: Props) {
 
 interface ClaimProps {
   claim: string
-  payload: JwtPayload
+  payload: JwtPayload | JwtPayloadObjectValue
   level: number
   last: boolean
 }
 
 function Claim(props: ClaimProps) {
+  const value = props.payload[props.claim];
+  const keys = useMemo(() => value && typeof value === "object" ? Object.keys(value) : null, [value]);
+
+  if (value && typeof value === 'object') {
+    return (
+      <div style={{marginLeft: props.level * 15}}>
+        <div className="criipto-jwt-viewer-claim">
+          "{props.claim}": &#123;<br />
+          {keys!.map((key, index) => <Claim key={key} claim={key} payload={value} level={props.level + 1} last={index === keys!.length - 1} />)}
+          &#125;{props.last ? null : ','}<br />
+          <ClaimTooltip claim={props.claim} payload={props.payload} />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={{marginLeft: props.level * 15}}>
       <div className="criipto-jwt-viewer-claim">
@@ -44,7 +60,7 @@ function Claim(props: ClaimProps) {
 
 interface ClaimTooltipProps {
   claim: string
-  payload: JwtPayload
+  payload: JwtPayload | JwtPayloadObjectValue
 }
 function ClaimTooltip(props: ClaimTooltipProps) {
   const {claim} = props;
@@ -59,7 +75,7 @@ function ClaimTooltip(props: ClaimTooltipProps) {
   if (claim === 'nameidentifier') tooltip = `Legacy format of 'sub'`;
   if (claim === 'sub') tooltip = `Persistent pseudonym. Uniquely identifies an eID user`;
   if (claim === 'authenticationtype') tooltip = `acr_values used to authenticate`;
-  
+  if (claim === 'address') tooltip = "An OpenID Connect standard address claim"
 
   if (!tooltip) return null;
   return <Tooltip tooltip={tooltip} />
