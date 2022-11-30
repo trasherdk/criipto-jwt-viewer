@@ -16,6 +16,11 @@
   max-width: 200px;
 }
 
+.criipto-jwt-viewer-tooltip a, .criipto-jwt-viewer-tooltip a:hover, .criipto-jwt-viewer-tooltip a:visited {
+  color: inherit;
+  text-decoration: underline;
+}
+
 .criipto-jwt-viewer-tooltip .arrow {
   position: absolute;
   right: -4px;

@@ -18,3 +18,9 @@ MITID_CITIZEN.storyName = 'MitID / Citizen';
 MITID_CITIZEN.args = {
   payload: samples.MITID_CITIZEN.payload
 };
+
+export const MITID_CITIZEN_ADDRESS = Template.bind({});
+MITID_CITIZEN_ADDRESS.storyName = 'MitID / Citizen / With address';
+MITID_CITIZEN_ADDRESS.args = {
+  payload: samples.MITID_CITIZEN_ADDRESS.payload
+};

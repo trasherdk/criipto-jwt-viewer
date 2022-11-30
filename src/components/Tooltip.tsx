@@ -3,7 +3,7 @@ import React from 'react';
 import './Tooltip.css';
 
 interface Props {
-  tooltip: string
+  tooltip: string | React.ReactElement
 }
 export default function Tooltip(props: Props) {
   return (
