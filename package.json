@@ -37,6 +37,8 @@
     "@storybook/manager-webpack5": "^6.5.13",
     "@storybook/react": "^6.5.13",
     "@storybook/testing-library": "^0.0.13",
+    "@types/react": "^18.0.25",
+    "@types/react-dom": "^18.0.9",
     "babel-loader": "^8.3.0",
     "css-loader": "^6.7.2",
     "mini-css-extract-plugin": "^2.7.1",
@@ -48,5 +50,7 @@
     "webpack-cli": "^5.0.0",
     "webpack-node-externals": "^3.0.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "jwt-decode": "^3.1.2"
+  }
 }
