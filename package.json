@@ -1,6 +1,6 @@
 {
   "name": "@criipto/jwt-viewer",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "dist/criipto-jwt-viewer.cjs.js",
   "types": "dist/index.d.ts",
