@@ -1,6 +1,6 @@
 {
   "name": "@criipto/jwt-viewer",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "main": "dist/criipto-verify-react.cjs.js",
   "types": "dist/index.d.ts",
