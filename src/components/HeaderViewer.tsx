@@ -49,7 +49,7 @@ function HeaderTooltip(props: HeaderTooltipProps) {
 
   if (item === 'typ') tooltip = 'Type of token. Always JWT';
   if (item === 'alg') tooltip = 'Signature algorithm';
-  if (item === 'kid') tooltip = 'Domain token signing key used';
+  if (item === 'kid') tooltip = 'ID of token signing key';
 
   if (!tooltip) return null;
   return <Tooltip tooltip={tooltip} />
