@@ -57,7 +57,7 @@ function Claim(props: ClaimProps) {
     return (
       <div style={{marginLeft: 15}}>
         <div className="criipto-jwt-viewer-claim">
-          {typeof props.claim === "number" ? null : `${props.claim}: `}&#123;<br />
+          {typeof props.claim === "number" ? null : `"${props.claim}": `}&#123;<br />
           {keys!.map((key, index) => <Claim key={key} claim={key} parentClaim={claimPath} payload={value} last={index === keys!.length - 1} />)}
           &#125;{props.last ? null : ','}<br />
           <ClaimTooltip
@@ -114,7 +114,6 @@ function ClaimTooltip(props: ClaimTooltipProps) {
   if (claimPath === 'dk:gov:saml:attribute:mitid_risk_data.riskData[]') {
     if (typeof value === "object" && !Array.isArray(value)) {
       const riskData = value as MitIDRiskData;
-      console.log(claimPath, riskData);
       if (riskData.pc === 'network' && riskData.pt === 'ip'){
         if (riskData.src === 'Client') {
           tooltip = 'IP-Address of the browser that started the MitID authentication'
