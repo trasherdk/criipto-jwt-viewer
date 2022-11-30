@@ -1,6 +1,8 @@
 import React, {useMemo} from 'react';
 import { JwtPayload } from '../samples';
 
+import Tooltip from './Tooltip';
+
 import './PayloadViewer.css';
 
 interface Props {
@@ -34,17 +36,17 @@ function Claim(props: ClaimProps) {
     <div style={{marginLeft: props.level * 15}}>
       <div className="criipto-jwt-viewer-claim">
         "{props.claim}": {JSON.stringify(props.payload[props.claim])}{props.last ? null : ','}
-        <Tooltip claim={props.claim} payload={props.payload} />
+        <ClaimTooltip claim={props.claim} payload={props.payload} />
       </div>
     </div>
   );
 }
 
-interface TooltipProps {
+interface ClaimTooltipProps {
   claim: string
   payload: JwtPayload
 }
-function Tooltip(props: TooltipProps) {
+function ClaimTooltip(props: ClaimTooltipProps) {
   const {claim} = props;
   let tooltip : string | null = null;
 
@@ -60,10 +62,5 @@ function Tooltip(props: TooltipProps) {
   
 
   if (!tooltip) return null;
-  return (
-    <div className="criipto-jwt-viewer-tooltip">
-      {tooltip}
-      <div className="arrow" />
-    </div>
-  );
+  return <Tooltip tooltip={tooltip} />
 }
