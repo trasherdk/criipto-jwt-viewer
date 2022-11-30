@@ -14,10 +14,10 @@
 }
 
 .criipto-jwt-viewer-tooltip {
-  background: #000;
+  background: #333;
   color: #EEE;
   border-radius: 4px;
-  padding: 3px 7px;
+  padding: 4px 7px;
   opacity: 0;
   transition: opacity 0.2s;
   position: absolute;
