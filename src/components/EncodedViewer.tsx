@@ -3,12 +3,12 @@ import React, {useState} from 'react';
 import './EncodedViewer.css';
 
 interface Props {
-  jwt: string,
+  jwt?: string,
   onChange?: (jwt: string) => void
 }
 export default function EncodedViewer(props: Props) {
   const [jwt, setJwt] = useState(props.jwt);
-  const [header, payload, signature] = jwt.split(".");
+  const [header, payload, signature] = jwt ? jwt.split(".") : [];
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setJwt(event.target.value);
@@ -18,15 +18,19 @@ export default function EncodedViewer(props: Props) {
   return (
     <div className="criipto-jwt-viewer-encoded">
       <textarea value={jwt} onChange={handleChange} />
-      <span className="header">{header}</span>
-      {payload !== undefined ? (
+      {header !== undefined ? (
         <React.Fragment>
-          <span className="dot">.</span>
-          <span className="payload">{payload}</span>
-          {signature !== undefined ? (
+        <span className="header">{header}</span>
+          {payload !== undefined ? (
             <React.Fragment>
               <span className="dot">.</span>
-              <span className="signature">{signature}</span>
+              <span className="payload">{payload}</span>
+              {signature !== undefined ? (
+                <React.Fragment>
+                  <span className="dot">.</span>
+                  <span className="signature">{signature}</span>
+                </React.Fragment>
+              ) : null}
             </React.Fragment>
           ) : null}
         </React.Fragment>

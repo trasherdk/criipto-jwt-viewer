@@ -11,9 +11,10 @@
 
 .criipto-jwt-viewer-claim {
   position: relative;
+  overflow-wrap: anywhere;
 }
 
-.criipto-jwt-viewer-claim:hover .criipto-jwt-viewer-tooltip {
+.criipto-jwt-viewer-claim:hover > .criipto-jwt-viewer-tooltip {
   opacity: 1;
 }
 
