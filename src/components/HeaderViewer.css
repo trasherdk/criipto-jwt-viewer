@@ -11,6 +11,7 @@
 
 .criipto-jwt-viewer-header-item {
   position: relative;
+  overflow-wrap: anywhere;
 }
 
 .criipto-jwt-viewer-header-item:hover .criipto-jwt-viewer-tooltip {

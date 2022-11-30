@@ -26,6 +26,9 @@
   z-index: 2;
   background: transparent;
   resize: none;
+
+  min-height: 250px;
+  overflow-y: hidden;
 }
 
 .criipto-jwt-viewer-encoded .dot {

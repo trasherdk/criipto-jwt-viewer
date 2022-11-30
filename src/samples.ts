@@ -1,4 +1,4 @@
-import jwtDecode from "jwt-decode";
+import jwtDecode, { JwtDecodeOptions } from "jwt-decode";
 
 export interface JwtHeader {
   type: string
@@ -40,6 +40,15 @@ export type Sample = {
   jwt: string
   header: JwtHeader
   payload: JwtPayload
+}
+
+export function tryJwtDecode<T>(jwt: string, options: JwtDecodeOptions) {
+  try {
+    return jwtDecode<T>(jwt, options)
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
 }
 
 export function toSample(jwt: string) : Sample {
