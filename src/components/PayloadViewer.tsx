@@ -115,6 +115,8 @@ function ClaimTooltip(props: ClaimTooltipProps) {
   if (isClaimPath(claim, 'ridNumberIdentifier')) tooltip = "Danish NemID Employee-ID (a persistent pseudonym representing a legal person)"
   if (isClaimPath(claim, '2.5.4.10')) tooltip = "Company Name"
   if (isClaimPath(claim, 'companySignatory')) tooltip = "Company signatories can enter legal agreements on behalf of the company (DK readers: Ledelsesrepræsentant/tegningsberettiget)"
+  if (isClaimPath(claim, 'hetu')) tooltip = "Finnish SSN"
+  if (isClaimPath(claim, 'satu')) tooltip = "Finnish Unique Identification Number"
   if (isClaimPath(claim, 'address')) tooltip = (
     <React.Fragment>
       <a href="https://openid.net/specs/openid-connect-core-1_0.html#AddressClaim" target="_blank">
