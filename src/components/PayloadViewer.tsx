@@ -129,7 +129,7 @@ function ClaimTooltip(props: ClaimTooltipProps) {
     tooltip = "Danish MitID Person-ID (a persistent pseudonym which the DK authorities can use to identify the person). For citizens, it identifies the natural person. For employees, it identifies the legal person."
   }
 
-  if (claimPath === 'dk:gov:saml:attribute:mitid_risk_data.riskData[]') {
+  if (isClaimPath(claimPath, 'mitid_risk_data.riskData[]')) {
     if (typeof value === "object" && !Array.isArray(value)) {
       const riskData = value as MitIDRiskData;
       if (riskData.pc === 'network' && riskData.pt === 'ip'){
