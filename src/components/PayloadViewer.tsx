@@ -90,28 +90,46 @@ interface ClaimTooltipProps {
 function ClaimTooltip(props: ClaimTooltipProps) {
   const {claim, claimPath, value} = props;
   let tooltip : string | React.ReactElement | null = null;
+  let isClaimPath = function(cnd : string | number, claimPath : string) {
+    if (typeof cnd === 'number') return false;
 
-  if (claim === 'iss') tooltip = 'Your Criipto domain';
-  if (claim === 'aud') tooltip = 'ClientID/Realm of your Criipto Application';
-  if (claim === 'iat') tooltip = 'Issued at (seconds since Unix epoch)';
-  if (claim === 'nbf') tooltip = 'Not valid before (seconds since Unix epoch)';
-  if (claim === 'exp') tooltip = 'Expiration time (seconds since Unix epoch)';
-  if (claim === 'identityscheme') tooltip = 'Overall eID used to authenticate';
-  if (claim === 'nameidentifier' || claim === 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier') tooltip = `Legacy format of 'sub'`;
-  if (claim === 'sub') tooltip = `Persistent pseudonym. Uniquely identifies an eID user`;
-  if (claim === 'authenticationtype') tooltip = `acr_values used to authenticate`;
-  if (claim === 'cprNumberIdentifier' || claim === 'dk:gov:saml:attribute:CprNumberIdentifier') tooltip = "Danish SSN (CPR Nummer)"
-  if (claim === 'cvrNumberIdentifier' || claim === 'dk:gov:saml:attribute:CvrNumberIdentifier') tooltip = "Danish Business Registry Number (CVR Nummer)"
-  if (claim === 'address') tooltip = (
+    if (cnd === null) return false;
+    if (claimPath === null) return false;
+    if (cnd === claimPath) return true;
+    let ucCnd = cnd.toUpperCase(), ucPath = claimPath.toUpperCase();
+    return ucCnd.endsWith(`/${ucPath}`) || ucCnd.endsWith(`:${ucPath}`);
+  }
+
+  if (isClaimPath(claim, 'iss')) tooltip = 'Your Criipto domain';
+  if (isClaimPath(claim, 'aud')) tooltip = 'ClientID/Realm of your Criipto Application';
+  if (isClaimPath(claim, 'iat')) tooltip = 'Issued at (seconds since Unix epoch)';
+  if (isClaimPath(claim, 'nbf')) tooltip = 'Not valid before (seconds since Unix epoch)';
+  if (isClaimPath(claim, 'exp')) tooltip = 'Expiration time (seconds since Unix epoch)';
+  if (isClaimPath(claim, 'identityscheme')) tooltip = 'Overall eID used to authenticate';
+  if (isClaimPath(claim, 'nameidentifier')) tooltip = `Legacy format of 'sub'`;
+  if (isClaimPath(claim, 'sub')) tooltip = `Persistent pseudonym. Uniquely identifies an eID user (per Criipto Verify tenant)`;
+  if (isClaimPath(claim, 'authenticationtype')) tooltip = `acr_values used to authenticate`;
+  if (isClaimPath(claim, 'cprNumberIdentifier')) tooltip = "Danish SSN (CPR Nummer)"
+  if (isClaimPath(claim, 'pidNumberIdentifier')) tooltip = "Danish NemID Person-ID (a persistent pseudonym which the DK authorities can use to identify the citizen)"
+  if (isClaimPath(claim, 'cvrNumberIdentifier')) tooltip = "Danish Business Registry Number (CVR Nummer)"
+  if (isClaimPath(claim, 'ridNumberIdentifier')) tooltip = "Danish NemID Employee-ID (a persistent pseudonym representing a legal person)"
+  if (isClaimPath(claim, '2.5.4.10')) tooltip = "Company Name"
+  if (isClaimPath(claim, 'companySignatory')) tooltip = "Company signatories can enter legal agreements on behalf of the company (DK readers: Ledelsesrepræsentant/tegningsberettiget)"
+  if (isClaimPath(claim, 'hetu')) tooltip = "Finnish SSN"
+  if (isClaimPath(claim, 'satu')) tooltip = "Finnish Unique Identification Number"
+  if (isClaimPath(claim, 'address')) tooltip = (
     <React.Fragment>
       <a href="https://openid.net/specs/openid-connect-core-1_0.html#AddressClaim" target="_blank">
         An OpenID Connect standard address claim
       </a>
     </React.Fragment>
   );
-  if (claim === 'pidNumberIdentifier') tooltip = 'Unique legal identifier for Danish Citizen without requiring SSN'
 
-  if (claimPath === 'dk:gov:saml:attribute:mitid_risk_data.riskData[]') {
+  if (isClaimPath(claim, 'uuid')) {
+    tooltip = "Danish MitID Person-ID (a persistent pseudonym which the DK authorities can use to identify the person). For citizens, it identifies the natural person. For employees, it identifies the legal person."
+  }
+
+  if (isClaimPath(claimPath, 'mitid_risk_data.riskData[]')) {
     if (typeof value === "object" && !Array.isArray(value)) {
       const riskData = value as MitIDRiskData;
       if (riskData.pc === 'network' && riskData.pt === 'ip'){
