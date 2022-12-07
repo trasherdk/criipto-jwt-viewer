@@ -88,7 +88,9 @@ interface ClaimTooltipProps {
   value: JwtPayloadValue
 }
 function ClaimTooltip(props: ClaimTooltipProps) {
-  const {claim, claimPath, value} = props;
+  const {claim, claimPath, value, payload} = props;
+  const identityscheme = "identityscheme" in payload ? payload.identityscheme : null;
+
   let tooltip : string | React.ReactElement | null = null;
   let isClaimPath = function(cnd : string | number, claimPath : string) {
     if (typeof cnd === 'number') return false;
@@ -111,6 +113,7 @@ function ClaimTooltip(props: ClaimTooltipProps) {
   if (isClaimPath(claim, 'authenticationtype')) tooltip = `acr_values used to authenticate`;
   if (isClaimPath(claim, 'socialno')) tooltip = "Social security number"
   if (isClaimPath(claim, 'ssn')) tooltip = "Social security number"
+  if (isClaimPath(claim, 'uniqueuserid')) tooltip = "Identifies the legal person corresponding to the login (just like the socialno does, but is not considered to be sensitive)"
   if (isClaimPath(claim, 'cprNumberIdentifier')) tooltip = "Danish SSN (CPR Nummer)"
   if (isClaimPath(claim, 'pidNumberIdentifier')) tooltip = "Danish NemID Person-ID (a persistent pseudonym which the DK authorities can use to identify the citizen)"
   if (isClaimPath(claim, 'cvrNumberIdentifier')) tooltip = "Danish Business Registry Number (CVR Nummer)"
@@ -119,10 +122,25 @@ function ClaimTooltip(props: ClaimTooltipProps) {
   if (isClaimPath(claim, 'companySignatory')) tooltip = "Company signatories can enter legal agreements on behalf of the company (DK readers: Ledelsesrepræsentant/tegningsberettiget)"
   if (isClaimPath(claim, 'hetu')) tooltip = "Finnish SSN"
   if (isClaimPath(claim, 'satu')) tooltip = "Finnish Unique Identification Number"
+  if (isClaimPath(claim, 'name') && identityscheme === 'fitupas') tooltip = 'Display name (when available for the user), or sub value received from Telia.'
   if (isClaimPath(claim, 'address')) tooltip = (
     <React.Fragment>
       <a href="https://openid.net/specs/openid-connect-core-1_0.html#AddressClaim" target="_blank">
         An OpenID Connect standard address claim
+      </a>
+    </React.Fragment>
+  );
+  if (isClaimPath(claim, 'given_name')) tooltip = (
+    <React.Fragment>
+      <a href="https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims" target="_blank">
+        An OpenID Connect standard claim
+      </a>
+    </React.Fragment>
+  );
+  if (isClaimPath(claim, 'family_name')) tooltip = (
+    <React.Fragment>
+      <a href="https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims" target="_blank">
+        An OpenID Connect standard claim
       </a>
     </React.Fragment>
   );
