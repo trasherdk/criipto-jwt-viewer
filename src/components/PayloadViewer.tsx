@@ -109,6 +109,8 @@ function ClaimTooltip(props: ClaimTooltipProps) {
   if (isClaimPath(claim, 'nameidentifier')) tooltip = `Legacy format of 'sub'`;
   if (isClaimPath(claim, 'sub')) tooltip = `Persistent pseudonym. Uniquely identifies an eID user (per Criipto Verify tenant)`;
   if (isClaimPath(claim, 'authenticationtype')) tooltip = `acr_values used to authenticate`;
+  if (isClaimPath(claim, 'socialno')) tooltip = "Social security number"
+  if (isClaimPath(claim, 'ssn')) tooltip = "Social security number"
   if (isClaimPath(claim, 'cprNumberIdentifier')) tooltip = "Danish SSN (CPR Nummer)"
   if (isClaimPath(claim, 'pidNumberIdentifier')) tooltip = "Danish NemID Person-ID (a persistent pseudonym which the DK authorities can use to identify the citizen)"
   if (isClaimPath(claim, 'cvrNumberIdentifier')) tooltip = "Danish Business Registry Number (CVR Nummer)"
