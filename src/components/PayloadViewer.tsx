@@ -122,7 +122,7 @@ function ClaimTooltip(props: ClaimTooltipProps) {
   if (isClaimPath(claim, 'companySignatory')) tooltip = "Company signatories can enter legal agreements on behalf of the company (DK readers: Ledelsesrepræsentant/tegningsberettiget)"
   if (isClaimPath(claim, 'hetu')) tooltip = "Finnish SSN"
   if (isClaimPath(claim, 'satu')) tooltip = "Finnish Unique Identification Number"
-  if (isClaimPath(claim, 'name') && identityscheme === 'fitupas') tooltip = 'Display name (when available for the user), or sub value received from Telia.'
+  if (isClaimPath(claim, 'name') && identityscheme === 'fitupas') tooltip = 'Display name (when available for the user), or sub value received from FTN provider.'
   if (isClaimPath(claim, 'address')) tooltip = (
     <React.Fragment>
       <a href="https://openid.net/specs/openid-connect-core-1_0.html#AddressClaim" target="_blank">
