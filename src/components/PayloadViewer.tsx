@@ -144,7 +144,7 @@ function ClaimTooltip(props: ClaimTooltipProps) {
   }
 
   if (!tooltip) {
-    if ("STORYBOOK_ENV" in window) {
+    if (typeof window !== "undefined" && "STORYBOOK_ENV" in window) {
       console.warn(`Missing tooltip for ${claimPath}: ${JSON.stringify(value)}`);
     }
     return null;
